@@ -5,6 +5,7 @@ const mongoose = require("mongoose");
 //mongoose.set('strictQuery', true);
 //test
 
+const MONGO_URI = 'mongodb+srv://Shekhar:Password@assesmentcluster.xe3lf.mongodb.net/';
 const connectDB = async () => {
   try {
     await mongoose.connect(process.env.MONGO_URI);  // Remove deprecated options
