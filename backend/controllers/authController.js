@@ -1,5 +1,5 @@
-
 const User = require('../models/User');
+const Event = require('../models/Event');
 const jwt = require('jsonwebtoken');
 const bcrypt = require('bcrypt');
 
