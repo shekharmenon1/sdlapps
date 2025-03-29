@@ -120,4 +120,23 @@ const updateEvent = async (req, res) => {
     }
 };
 
+const getEvent = async (req, res) => {
+    const eventname = req.query.eventName;
+    try {
+        const event = await Event.findOne({ Ename: eventname });
+        if (!event) {
+            return res.status(404).json({ message: 'Event not found' });
+        }
+        console.log("Event found");
+        return res.status(200).json({
+            id: event.id,
+            Ename: event.Ename,
+            Vname: event.Vname,
+            Edate: event.Edate,
+        });
+    } catch (error) {
+        res.status(500).json({ message: 'Server error', error: error.message });
+    }
+};
+
 module.exports = { registerUser, loginUser, updateUserProfile, getProfile };
