@@ -70,4 +70,24 @@ const updateUserProfile = async (req, res) => {
     }
 };
 
+const createEvent = async (req, res) => {
+    const { Ename, Vname, Edate } = req.body;
+    try {
+        const eventExists = await Event.findOne({ Ename });
+        if (eventExists) {
+            return res.status(400).json({ message: 'Event with this name already exists' });
+        }
+        const event = await Event.create({ Ename, Vname, Edate });
+        console.log("Event Created");
+        return res.status(201).json({
+            id: event.id,
+            Ename: event.Ename,
+            Vname: event.Vname,
+            Edate: event.Edate,
+        });
+    } catch (error) {
+        res.status(500).json({ message: error.message });
+    }
+};
+
 module.exports = { registerUser, loginUser, updateUserProfile, getProfile };
