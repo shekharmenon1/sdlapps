@@ -139,4 +139,18 @@ const getEvent = async (req, res) => {
     }
 };
 
+const deleteEvent = async (req, res) => {
+    try {
+        const event = await Event.findOne({ Ename: req.params.Ename });
+        if (!event) {
+            return res.status(404).json({ message: 'Event not found' });
+        }
+        await event.deleteOne(); // Deletes the event from the database
+        console.log("Event Deleted");
+        return res.status(200).json({ message: 'Event deleted successfully' });
+    } catch (error) {
+        res.status(500).json({ message: 'Server error', error: error.message });
+    }
+};
+
 module.exports = { registerUser, loginUser, updateUserProfile, getProfile };
