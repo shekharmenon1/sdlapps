@@ -90,4 +90,34 @@ const createEvent = async (req, res) => {
     }
 };
 
+const updateEvent = async (req, res) => {
+    console.log('Going to edit page');
+    try {
+        const event = await Event.findOne({ Ename: req.params.Ename }); 
+        
+        if (!event) {
+            return res.status(404).json({ message: 'Event not found' });
+        }
+
+        const { Ename, Vname, Edate } = req.body;
+
+        event.Ename = Ename || event.Ename;
+        event.Vname = Vname || event.Vname;
+        event.Edate = Edate || event.Edate;
+
+        const updatedEvent = await event.save();
+
+        console.log("Event updated");
+        return res.json({
+            id: updatedEvent.id,
+            Ename: updatedEvent.Ename,
+            Vname: updatedEvent.Vname,
+            Edate: updatedEvent.Edate,
+        });
+    } catch (error) {
+        console.error(error);
+        res.status(500).json({ message: error.message });
+    }
+};
+
 module.exports = { registerUser, loginUser, updateUserProfile, getProfile };
