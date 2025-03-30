@@ -70,4 +70,91 @@ const updateUserProfile = async (req, res) => {
     }
 };
 
-module.exports = { registerUser, loginUser, updateUserProfile, getProfile };
+const createEvent = async (req, res) => {
+    const { Ename, Vname, Edate } = req.body;
+    try {
+        const eventExists = await Event.findOne({ Ename });
+        if (eventExists) {
+            return res.status(400).json({ message: 'Event with this name already exists' });
+        }
+        const event = await Event.create({ Ename, Vname, Edate });
+        console.log("Event Created");
+        return res.status(201).json({
+            id: event.id,
+            Ename: event.Ename,
+            Vname: event.Vname,
+            Edate: event.Edate,
+        });
+    } catch (error) {
+        res.status(500).json({ message: error.message });
+    }
+};
+
+const updateEvent = async (req, res) => {
+    console.log('Going to edit page');
+    try {
+        const event = await Event.findOne({ Ename: req.params.Ename }); 
+        
+        if (!event) {
+            return res.status(404).json({ message: 'Event not found' });
+        }
+
+        const { Ename, Vname, Edate } = req.body;
+
+        event.Ename = Ename || event.Ename;
+        event.Vname = Vname || event.Vname;
+        event.Edate = Edate || event.Edate;
+
+        const updatedEvent = await event.save();
+
+        console.log("Event updated");
+        return res.json({
+            id: updatedEvent.id,
+            Ename: updatedEvent.Ename,
+            Vname: updatedEvent.Vname,
+            Edate: updatedEvent.Edate,
+        });
+    } catch (error) {
+        console.error(error);
+        res.status(500).json({ message: error.message });
+    }
+};
+
+
+
+
+const getEvent = async (req, res) => {
+    const eventname = req.query.eventName;
+    try {
+        const event = await Event.findOne({ Ename: eventname });
+        if (!event) {
+            return res.status(404).json({ message: 'Event not found' });
+        }
+        console.log("Event found");
+        return res.status(200).json({
+            id: event.id,
+            Ename: event.Ename,
+            Vname: event.Vname,
+            Edate: event.Edate,
+        });
+    } catch (error) {
+        res.status(500).json({ message: 'Server error', error: error.message });
+    }
+};
+
+
+const deleteEvent = async (req, res) => {
+    try {
+        const event = await Event.findOne({ Ename: req.params.Ename });
+        if (!event) {
+            return res.status(404).json({ message: 'Event not found' });
+        }
+        await event.deleteOne(); // Deletes the event from the database
+        console.log("Event Deleted");
+        return res.status(200).json({ message: 'Event deleted successfully' });
+    } catch (error) {
+        res.status(500).json({ message: 'Server error', error: error.message });
+    }
+};
+
+module.exports = { registerUser, loginUser, updateUserProfile, getProfile, createEvent, updateEvent, getEvent, deleteEvent };
