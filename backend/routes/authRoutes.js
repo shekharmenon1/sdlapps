@@ -20,8 +20,8 @@ router.put('/profile', protect, updateUserProfile);
 
 // Event-related routes
 router.post('/tasks', createEvent); // Create a new event/task
-router.put('/tasks/:Ename', updateEvent); // Update event/task by ID
+router.put('/tasks/:Ename', updateEvent); // Update event/task by event name
 router.get('/tasks', getEvent); // Get events/tasks
-router.delete('/tasks/:Ename', deleteEvent); // Delete event/task by ID
+router.delete('/tasks/:Ename', deleteEvent); // Delete event/task by event name
 
 module.exports = router;
